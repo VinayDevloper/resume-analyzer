@@ -41,7 +41,7 @@ async function uploadFile() {
     formData.append("file", file);
 
     try {
-        const response = await fetch("http://127.0.0.1:8000/upload", {
+        const response = await fetch("https://resume-analyzer-asbi.onrender.com/upload", {
             method: "POST",
             body: formData
         });
