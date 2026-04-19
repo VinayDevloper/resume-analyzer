@@ -4,6 +4,8 @@ from fastapi import UploadFile, File
 import pdfplumber
 from fastapi.middleware.cors import CORSMiddleware
 
+def normalize(text):
+    return text.lower().strip()
 
 def get_ai_suggestions():
     return "Improve project impact, add metrics, and highlight tech stack clearly."
@@ -109,16 +111,6 @@ def upload_file(
 
     required_skills = ROLE_SKILLS.get(role, [])
 
-    matched_keywords = list(set(required_skills) & set(resume_keywords))
-    missing_keywords = list(set(required_skills) - set(resume_keywords))
-
-    if len(required_skills) > 0:
-        match_percent = int((len(matched_keywords) / len(required_skills)) * 100)
-    else:
-        match_percent = 0
-
-
-
 
     for key, values in SYNONYMS.items():
         for val in values:
@@ -142,7 +134,7 @@ def upload_file(
         found = False
 
         # direct match
-        if skill.lower() in text_lower:
+        if re.search(rf"\b{re.escape(skill.lower())}\b", text_lower):
             found = True
 
         # synonym match
@@ -156,6 +148,11 @@ def upload_file(
             matched_skills.append(skill)
         else:
             missing_skills.append(skill)
+
+    if len(required_skills) > 0:
+        match_percent = int((len(matched_skills) / len(required_skills)) * 100)
+    else:
+        match_percent = 0
 
     header = [line.strip() for line in lines if line.strip()][:3]
 
@@ -249,8 +246,8 @@ def upload_file(
             },
             "keyword_analysis": {
             "match_percent": match_percent,
-            "matched_keywords": matched_keywords[:20],
-            "missing_keywords": missing_keywords[:20]
+            "matched_keywords": matched_skills[:20],
+            "missing_keywords": missing_skills[:20]
             },
             "skills": 
                 {"matched skills": matched_skills ,
