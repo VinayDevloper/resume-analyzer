@@ -15,7 +15,9 @@ Analyze your resume against a job role and get clear insights on missing skills,
 ![Result](screenshots/screenshot_result.png)
 
 ## 🎥 Demo Video
-[▶️ Watch Demo](screenshots/resume-analyzer video.mp4)
+Click below to watch the demo:
+
+[▶️ Watch Demo](screenshots/resume-analyzer%20video.mp4)
 
 ## ⚙️ Features
 - Upload resume (PDF)
