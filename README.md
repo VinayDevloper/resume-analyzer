@@ -1,36 +1,37 @@
-## 🚀 Live Demo
-👉 https://resume-analyzer-murex-mu.vercel.app
-
 # Resume Analyzer 🚀
 
-A simple AI-powered Resume Analyzer that gives insights on skills, score, and suggestions.
+Analyze your resume against a job role and get clear insights on missing skills, match score, and improvements.
 
 ## 🔗 Live Demo
 Frontend: https://resume-analyzer-murex-mu.vercel.app  
 Backend API: https://resume-analyzer-asbi.onrender.com
+
+## 📷 Screenshots
+
+### Upload Screen
+![Upload](screenshots/upload.png)
+
+### Result Screen
+![Result](screenshots/screenshot_result.png)
 
 ## ⚙️ Features
 - Upload resume (PDF)
 - Get score out of 100
 - See matched & missing skills
 - Get improvement suggestions
+- Download report
 
 ## 🛠 Tech Stack
 - Frontend: HTML, CSS, JavaScript
 - Backend: FastAPI (Python)
 - Deployment: Render (Backend), Vercel (Frontend)
 
-## 📸 Screenshots
-![screenshot Home](image.png)
-
-
-
 ## 🚀 How to run locally
 ```bash
-git clone <your-repo-link>
+git clone https://github.com/VinayDeveloper/resume-analyzer.git
 cd resume-analyzer
 pip install -r requirements.txt
 uvicorn app.main:app --reload
 
-
-
+## 🙌 Feedback
+If you found this useful, consider giving it a ⭐ and sharing feedback!
