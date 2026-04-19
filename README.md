@@ -3,8 +3,8 @@
 Analyze your resume against a job role and get clear insights on missing skills, match score, and improvements.
 
 ## 🔗 Live Demo
-Frontend: https://resume-analyzer-murex-mu.vercel.app  
-Backend API: https://resume-analyzer-asbi.onrender.com
+🌐 Live App: https://resume-analyzer-murex-mu.vercel.app  
+⚙️ API: https://resume-analyzer-asbi.onrender.com
 
 ## 📷 Screenshots
 
@@ -16,7 +16,7 @@ Backend API: https://resume-analyzer-asbi.onrender.com
 
 ## ⚙️ Features
 - Upload resume (PDF)
-- Get score out of 100
+- Resume score (out of 100)
 - See matched & missing skills
 - Get improvement suggestions
 - Download report
