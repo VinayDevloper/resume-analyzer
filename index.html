@@ -21,7 +21,17 @@
             <p id="fileName" class="file-name"></p>
         </div>
 
-        <button id="uploadBtn" onclick="uploadFile()">Analyze Resume</button>
+        <div class="input-row">
+            <select id="roleSelect">
+                <option value="">Select Role</option>
+                <option value="frontend">Frontend Developer</option>
+                <option value="backend">Backend Developer</option>
+                <option value="fullstack">Fullstack Developer</option>
+                <option value="data">Data / ML</option>
+                <option value="uiux">UI/UX Designer</option>
+            </select>
+            <button id="uploadBtn" onclick="uploadFile()">Analyze Resume</button>
+        </div>
 
     </div>
 

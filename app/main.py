@@ -4,6 +4,26 @@ from fastapi import UploadFile, File
 import pdfplumber
 from fastapi.middleware.cors import CORSMiddleware
 
+
+def get_ai_suggestions():
+    return "Improve project impact, add metrics, and highlight tech stack clearly."
+
+
+def extract_keywords(text):
+    words = re.findall(r"\b[a-zA-Z]{2,}\b", text.lower())
+
+    stopwords = {
+        "the", "and", "for", "with", "you", "your",
+        "are", "this", "that", "have", "will", "from",
+        "a", "an", "to", "of", "in", "on"
+    }
+
+    keywords = [w for w in words if w not in stopwords]
+
+    return list(set(keywords))
+
+
+
 SYNONYMS = {
     "ui design": ["visual design", "interface design"],
     "javascript": ["js"],
@@ -59,8 +79,13 @@ def root():
 def test():
     return {"message": "API is running"}
 
+from fastapi import Form
+
 @app.post("/upload")
-def upload_file(file: UploadFile = File(...) ):
+def upload_file(
+    file: UploadFile = File(...),
+    role: str = Form(...)
+):
 
     if file.content_type != "application/pdf":
         return {"error": "Only PDF files allowed"}
@@ -72,23 +97,35 @@ def upload_file(file: UploadFile = File(...) ):
     with pdfplumber.open(file.file) as pdf:
         for page in pdf.pages:
             text += page.extract_text() or ""
-
-
     
-
     text = text.replace("\n", " ")
     text = re.sub(r"\s+", " ", text)
     text_lower = text.lower()
 
     if not text.strip():
         return {"error": "No text could be extracted from the PDF"}
+    
+    resume_keywords = extract_keywords(text)
+
+    required_skills = ROLE_SKILLS.get(role, [])
+
+    matched_keywords = list(set(required_skills) & set(resume_keywords))
+    missing_keywords = list(set(required_skills) - set(resume_keywords))
+
+    if len(required_skills) > 0:
+        match_percent = int((len(matched_keywords) / len(required_skills)) * 100)
+    else:
+        match_percent = 0
+
+
+
 
     for key, values in SYNONYMS.items():
         for val in values:
             if val in text_lower:
                 text_lower += " " + key
 
-    lines = re.split(r"[|,\n]", text)
+    lines = re.split(r"[|,]", text)
 
 
     email = None
@@ -97,45 +134,6 @@ def upload_file(file: UploadFile = File(...) ):
 
     if match:
         email = match.group(0)
-
-    
-
-    # Role based
-    role_scores = {
-    "frontend": 0,
-    "backend": 0,
-    "fullstack": 0,
-    "data": 0,
-    "uiux": 0
-    }
-
-    # frontend signals
-    if any(word in text_lower for word in ["react", "next", "frontend"]):
-        role_scores["frontend"] += 1
-
-    # backend signals
-    if any(word in text_lower for word in ["node", "express", "api"]):
-        role_scores["backend"] += 1
-
-    # data signals
-    if any(word in text_lower for word in ["pandas","python", "numpy", "machine learning", "data science"]):
-        role_scores["data"] += 1
-
-    # uiux signals
-    if any(word in text_lower for word in [
-    "figma", "ui/ux", "ux design", "user research","wireframing", "prototyping", "design system"]):
-        role_scores["uiux"] += 2   
-    # 🔥 fullstack logic    
-    if role_scores["frontend"] > 0 and role_scores["backend"] > 0:
-        role = "fullstack"
-    else:
-        role = max(role_scores, key=role_scores.get)
-
-    if all(score == 0 for score in role_scores.values()):
-        role = "general"
-
-
-    required_skills = ROLE_SKILLS[role]
 
     matched_skills = []
     missing_skills = []
@@ -243,10 +241,16 @@ def upload_file(file: UploadFile = File(...) ):
     # normalize to 100
     total_score = int((total_score / 95) * 100)
 
+    ai_output = get_ai_suggestions()
 
     return{ "header": header,
             "basic_info": { 
                 "email": email
+            },
+            "keyword_analysis": {
+            "match_percent": match_percent,
+            "matched_keywords": matched_keywords[:20],
+            "missing_keywords": missing_keywords[:20]
             },
             "skills": 
                 {"matched skills": matched_skills ,
@@ -256,5 +260,9 @@ def upload_file(file: UploadFile = File(...) ):
             "required_skills": required_skills,
             "suggestions" : suggestions,
             "Score" : total_score,
-            "preview" : text[:200]
+            "preview" : text[:200],
+
+
+            "ai_insights": ai_output
+
             }

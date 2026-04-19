@@ -32,17 +32,23 @@ h1 {
 
 /* upload box */
 .upload-box {
-    border: 2px dashed #ccc;
-    padding: 40px;
-    border-radius: 10px;
+    border: 2px dashed #d1d5db;
+    padding: 50px;
+    border-radius: 16px;
     cursor: pointer;
-    margin-bottom: 20px;
-    transition: 0.2s;
+    margin-bottom: 25px;
+    transition: all 0.25s ease;
+    background: #fafbff;
 }
 
 .upload-box:hover {
-    border-color: #5b6cff;
-    background: #f9faff;
+    border-color: #4f46e5;
+    background: #f5f7ff;
+}
+
+.upload-box p:first-child {
+    font-weight: 600;
+    font-size: 16px;
 }
 
 /* file name */
@@ -54,18 +60,19 @@ h1 {
 
 /* button */
 button {
-    background: #5b6cff;
+    background: linear-gradient(to right, #4f46e5, #6366f1);
     color: white;
     border: none;
-    padding: 12px 25px;
-    border-radius: 8px;
+    padding: 14px 26px;
+    border-radius: 12px;
     cursor: pointer;
-    font-size: 16px;
-    transition: 0.2s;
+    font-size: 15px;
+    transition: 0.25s;
 }
 
 button:hover {
-    background: #4a5be0;
+    transform: translateY(-2px);
+    box-shadow: 0 10px 20px rgba(79,70,229,0.2);
 }
 
 button:disabled {
@@ -93,7 +100,7 @@ button:disabled {
 }
 
 .section {
-    margin-top: 25px;
+    margin-top: 15px;
 }
 
 .section h3 {
@@ -244,4 +251,201 @@ ul {
     flex-direction: column;
     justify-content: center;
     gap: 4px;
+}
+
+
+/* DASHBOARD LAYOUT */
+.dashboard {
+    display: flex;
+    gap: 20px;
+}
+
+/* LEFT PANEL */
+.left-panel {
+    width: 30%;
+}
+
+/* RIGHT PANEL */
+.right-panel {
+    width: 70%;
+}
+
+/* Make cards inside right panel look clean */
+.right-panel .section {
+    background: #f9fafc;
+    padding: 10px 12px;
+    border-radius: 10px;
+    margin-bottom: 12px;
+}
+.progress-bar {
+width: 100%;
+height: 8px;
+background: #e5e7eb;
+border-radius: 10px;
+margin: 10px 0;
+}
+
+.progress-fill {
+height: 100%;
+background: linear-gradient(to right, #22c55e, #4f46e5);
+border-radius: 10px;
+}
+
+.result-card.dashboard {
+    display: flex;
+}
+
+.score-label {
+    font-size: 13px;
+    margin-top: 5px;
+    color: #666;
+}
+
+.input-row {
+    display: flex;
+    gap: 12px;
+    width: 100%;
+    margin-top: 15px;
+}
+
+#roleSelect {
+    flex: 1; 
+}
+
+#jdInput {
+    width: 65%;
+    height: 55px;
+    padding: 12px 14px;
+    border-radius: 12px;
+    border: 1px solid #d1d5db;
+    resize: none;
+    font-size: 14px;
+    background: #f9fafc;
+    outline: none;
+    transition: 0.2s;
+}
+
+#jdInput:focus {
+    border-color: #4f46e5;
+    background: white;
+}
+
+.input-row button {
+    height: 45px;
+}
+
+.card {
+    background: white;
+    padding: 35px;
+    border-radius: 18px;
+    box-shadow: 0 20px 40px rgba(0,0,0,0.06);
+    border: 1px solid #eef0f5;
+}
+
+
+.suggestions-section {
+    margin-top: 8px;
+    padding-top: 5px;
+}
+
+.suggestions-box {
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+}
+
+.suggestions-section {
+    margin-top: 10px;
+}
+
+.suggestions-section h3 {
+    margin-bottom: 6px;
+    font-size: 15px;
+    font-weight: 600;
+    color: #111;
+}
+
+.suggestion-item {
+    background: #f9fafc;
+    padding: 6px 8px;
+    border-radius: 10px;
+    border: 1px solid #eef0f5;
+    font-size: 14px;
+    color: #333;
+    line-height: 1.5;
+}
+
+.suggestions-section h3 {
+    margin-bottom: 6px;
+}
+
+.download-btn {
+    margin-top: 15px;
+    background: #111;
+    color: white;
+    border: none;
+    padding: 10px 16px;
+    border-radius: 8px;
+    cursor: pointer;
+}
+
+.download-btn:hover {
+    background: #333;
+}
+
+#roleSelect {
+    padding: 0px 12px;
+    border-radius: 12px;
+    border: 1px solid #ddd;
+    font-size: 14px;
+    outline: none;
+    background: white;
+    cursor: pointer;
+}
+
+#roleSelect:hover {
+    border-color: #5b6cff;
+}
+
+.input-row {
+    display: flex;
+    gap: 10px;
+    justify-content: center;
+    align-items: center;
+    margin-top: 15px;
+}
+
+#roleSelect,
+.input-row button {
+    height: 50px;
+}
+
+.input-row button {
+    height: 50px;
+    padding: 0 20px;
+}
+
+#roleSelect {
+    height: 50px;
+    padding: 0 16px;
+    padding-right: 42px; /* icon के लिए space */
+    border-radius: 12px;
+    border: 1px solid #ddd;
+    font-size: 14px;
+    background: white;
+    outline: none;
+    cursor: pointer;
+
+    appearance: none;
+    -webkit-appearance: none;
+    -moz-appearance: none;
+
+    /* ✅ ICON FIX */
+    background-image: url("data:image/svg+xml;utf8,<svg fill='%23333' height='20' viewBox='0 0 20 20' width='20' xmlns='http://www.w3.org/2000/svg'><path d='M5 7l5 5 5-5z'/></svg>");
+    background-repeat: no-repeat;
+
+    /* 👉 ये सबसे important */
+    background-position: right 16px center;
+
+    background-size: 16px;
 }

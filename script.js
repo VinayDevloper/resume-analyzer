@@ -23,10 +23,19 @@ async function uploadFile() {
 
     const file = fileInput.files[0];
 
+
     if (!file) {
         output.innerHTML = `<p class="error">⚠️ Please select a file first</p>`;
         return;
     }
+
+    const role = document.getElementById("roleSelect").value;
+
+    if (!role) {
+    output.innerHTML = `<p class="error">⚠️ Please select a role</p>`;
+    return;
+    }
+
 
     output.innerHTML = `
     <div class="result-card" style="text-align:center;">
@@ -39,6 +48,8 @@ async function uploadFile() {
 
     const formData = new FormData();
     formData.append("file", file);
+    formData.append("role", role);
+
 
     try {
         const response = await fetch("https://resume-analyzer-asbi.onrender.com/upload", {
@@ -75,54 +86,89 @@ async function uploadFile() {
     }
 
     output.innerHTML = `
-    <div class="result-card">
+    <div class="result-card dashboard">
 
-        <div class="top-section">
+        <div class="left-panel">
 
-        <div class="score-box">
-            <div class="score-circle" style="background: conic-gradient(${scoreColor} ${data.Score}%, #e5e7eb ${data.Score}%); color: ${scoreColor};">
-                <span>${data.Score}</span>
+            <div class="score-box">
+                <div class="score-circle" style="background: conic-gradient(${scoreColor} ${data.Score}%, #e5e7eb ${data.Score}%); color: ${scoreColor};">
+                    <span>${data.Score}</span>
+                </div>
+                <p>Resume Score</p>
+                    <p class="score-label">
+                        ${data.Score >= 80 ? "Excellent Match" : 
+                        data.Score >= 60 ? "Good Match" : 
+                        "Needs Improvement"}
+                    </p>
             </div>
-            <p>Out of 100</p>
-        </div>
 
-        <div class="user-info">
-            <h2>Role: ${data.role}</h2>
-            <p class="email">Email: ${data.basic_info.email || "Not found"}</p>
-            <span class="badge">Resume Analysis</span>
-        </div>
-
-        </div>
-
-        <div class="section">
-            <h3>Matched Skills</h3>
-            <div class="skills">
-                ${data.skills["matched skills"].map(skill => 
-                    `<span class="matched">${skill}</span>`).join("")}
+            <div class="job-match-box">
+                <h3>Job Match</h3>
+                    <div class="progress-bar">
+                        <div class="progress-fill" style="width: ${data.keyword_analysis.match_percent}%"></div>
+                    </div>
+                    <p>${data.keyword_analysis.match_percent}% Match</p>
             </div>
+
         </div>
 
-        <div class="section">
-            <h3>Missing Skills</h3>
-            <div class="skills">
-                ${data.skills["missing skills"].map(skill => 
-                    `<span class="missing">${skill}</span>`).join("")}
+        <div class="right-panel">
+
+            <div class="section">
+                <h3>Matched Skills</h3>
+                <div class="skills">
+                    ${data.skills["matched skills"].map(skill => 
+                        `<span class="matched">${skill}</span>`).join("")}
+                </div>
             </div>
-        </div>
 
-        <div class="section">
-            <h3>Suggestions</h3>
-            <ul>
-                ${data.suggestions.map(s => `<li>${s}</li>`).join("")}
-            </ul>
-        </div>
+            <div class="section">
+                <h3>Missing Skills</h3>
+                
+                <div class="skills">
+                    ${data.skills["missing skills"].map(skill => 
+                        `<span class="missing">${skill}</span>`).join("")}
+                </div>
+            </div>
 
-        <button onclick="resetUI()" class="secondary-btn">
-        Analyze Another Resume
-        </button>
+            <div class="section">
+                <div class="section suggestions-section">
+                    <h3>Suggestions</h3>
+
+                    <div class="suggestions-box">
+                        ${data.suggestions.map(s => `
+                            <div class="suggestion-item">
+                                ${s}
+                            </div>
+                        `).join("")}
+                    </div>
+
+                    <button class="download-btn" id="downloadBtn">
+                        Download Report
+                    </button>
+                        
+
+                </div>
+            </div>
+
+            <div class="section">
+                <h3>Missing Keywords</h3>
+                <div class="skills">
+                    ${data.keyword_analysis.missing_keywords.map(k => 
+                        `<span class="missing">${k}</span>`).join("")}
+                </div>
+            </div>
+
+        </div>
 
     </div>
     `;
+        
+    setTimeout(() => {
+    document.getElementById("downloadBtn").onclick = function() {
+        downloadReport(data);
+    };
+    }, 0);
 
     } catch (error) {
     output.innerHTML = `
@@ -144,4 +190,45 @@ function resetUI() {
     document.getElementById("result").innerHTML = "";
     document.getElementById("uploadBtn").disabled = false;
     
+}
+
+
+function downloadReport(data) {
+    alert("Download clicked");
+    const report = `
+RESUME ANALYSIS REPORT
+----------------------
+
+Role: ${data.role}
+Score: ${data.Score}/100
+Job Match: ${data.keyword_analysis.match_percent}%
+
+----------------------
+MATCHED SKILLS:
+${data.skills["matched skills"].join(", ") || "None"}
+
+----------------------
+MISSING SKILLS:
+${data.skills["missing skills"].join(", ") || "None"}
+
+----------------------
+SUGGESTIONS:
+${data.suggestions.map(s => "- " + s).join("\n")}
+
+----------------------
+Generated by Resume Analyzer
+`;
+
+    const blob = new Blob([report], { type: "text/plain" });
+    const url = URL.createObjectURL(blob);
+
+    const a = document.createElement("a");
+    a.href = url;
+    a.download = "resume_report.txt";
+
+    document.body.appendChild(a);   // IMPORTANT
+    a.click();
+    document.body.removeChild(a);   // IMPORTANT
+
+    URL.revokeObjectURL(url);
 }

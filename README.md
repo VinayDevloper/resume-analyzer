@@ -1,3 +1,6 @@
+## 🚀 Live Demo
+👉 https://resume-analyzer-murex-mu.vercel.app
+
 # Resume Analyzer 🚀
 
 A simple AI-powered Resume Analyzer that gives insights on skills, score, and suggestions.
